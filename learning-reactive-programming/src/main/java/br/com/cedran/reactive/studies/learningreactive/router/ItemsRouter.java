@@ -30,4 +30,10 @@ public class ItemsRouter {
     return RouterFunctions.route(RequestPredicates.GET(ItemConstants.ITEM_FUNCTIONAL_ENDPOINT_V1+"/runtime/exception"),itemsHandler::exceptionHandler);
   }
 
+  @Bean
+  public RouterFunction<ServerResponse> itemStreamRoute(ItemsHandler itemsHandler) {
+    return RouterFunctions.route(RequestPredicates.GET(ItemConstants.STREAM_ITEM_FUNCTIONAL_ENDPOINT_V1)
+        , itemsHandler::itemsStream);
+
+  }
 }

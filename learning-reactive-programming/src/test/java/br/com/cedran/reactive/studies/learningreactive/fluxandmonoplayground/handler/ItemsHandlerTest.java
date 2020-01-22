@@ -2,10 +2,12 @@ package br.com.cedran.reactive.studies.learningreactive.fluxandmonoplayground.ha
 
 import br.com.cedran.reactive.studies.learningreactive.constants.ItemConstants;
 import br.com.cedran.reactive.studies.learningreactive.document.Item;
+import br.com.cedran.reactive.studies.learningreactive.document.ItemCapped;
 import br.com.cedran.reactive.studies.learningreactive.repository.ItemReactiveRepository;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,4 +243,20 @@ public class ItemsHandlerTest {
         .expectComplete();
   }
 
+  @Test
+  @Disabled(value = "Just an example, data needs to be loaded before enabling this test")
+  public void test_streamFunctional() {
+    Flux<ItemCapped> cappedFlux = webTestClient.get().uri(ItemConstants.STREAM_ITEM_FUNCTIONAL_ENDPOINT_V1)
+        .exchange()
+        .expectStatus().isOk()
+        .returnResult(ItemCapped.class)
+        .getResponseBody()
+        .take(5);
+
+    StepVerifier.create(cappedFlux)
+        .expectSubscription()
+        .expectNextCount(5)
+        .thenCancel()
+        .verify();
+  }
 }

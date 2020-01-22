@@ -1,6 +1,8 @@
 package br.com.cedran.reactive.studies.learningreactive.handler;
 
 import br.com.cedran.reactive.studies.learningreactive.document.Item;
+import br.com.cedran.reactive.studies.learningreactive.document.ItemCapped;
+import br.com.cedran.reactive.studies.learningreactive.repository.ItemCappedReactiveRepository;
 import br.com.cedran.reactive.studies.learningreactive.repository.ItemReactiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +16,9 @@ public class ItemsHandler {
 
   @Autowired
   private ItemReactiveRepository reactiveRepository;
+
+  @Autowired
+  private ItemCappedReactiveRepository cappedReactiveRepository;
 
 
   public Mono<ServerResponse> getAll(ServerRequest serverRequest) {
@@ -58,5 +63,11 @@ public class ItemsHandler {
 
   public Mono<ServerResponse> exceptionHandler(ServerRequest serverRequest) {
     throw new RuntimeException("Runtime exception functional handler.");
+  }
+
+  public Mono<ServerResponse> itemsStream(ServerRequest serverRequest) {
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_STREAM_JSON)
+        .body(cappedReactiveRepository.findItemsBy(), ItemCapped.class);
   }
 }
